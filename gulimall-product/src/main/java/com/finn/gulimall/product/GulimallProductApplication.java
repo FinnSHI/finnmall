@@ -1,13 +1,13 @@
-package com.finn.finnmall.member;
+package com.finn.gulimall.product;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FinnmallMemberApplication {
+public class GulimallProductApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FinnmallMemberApplication.class, args);
+        SpringApplication.run(GulimallProductApplication.class, args);
     }
 
 }

@@ -1,10 +1,10 @@
-package com.finn.finnmall.ware;
+package com.finn.gulimall.member;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FinnmallWareApplicationTests {
+class GulimallMemberApplicationTests {
 
     @Test
     void contextLoads() {

@@ -1,10 +1,10 @@
-package com.finn.finnmall.coupon;
+package com.finn.gulimall.coupon;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FinnmallCouponApplicationTests {
+class GulimallCouponApplicationTests {
 
     @Test
     void contextLoads() {
