@@ -8,11 +8,11 @@
         <version>2.6.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.finn.finnmall</groupId>
-    <artifactId>finnmall-order</artifactId>
+    <groupId>com.guli.gulimall</groupId>
+    <artifactId>gulimall-coupon</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>finnmall-order</name>
-    <description>finnmall-order</description>
+    <name>gulimall-coupon</name>
+    <description>gulimall-coupon</description>
     <properties>
         <java.version>1.8</java.version>
         <spring-cloud.version>2021.0.1</spring-cloud.version>
