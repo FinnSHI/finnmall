@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -15,6 +17,7 @@ import lombok.Data;
  * @date 2022-04-24 14:04:03
  */
 @Data
+@Builder
 @TableName("pms_brand")
 public class BrandEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -23,6 +23,7 @@ public class AttrAttrgroupRelationEntity implements Serializable {
 	 * id
 	 */
 	@TableId
+
 	private Long id;
 	/**
 	 * 属性id

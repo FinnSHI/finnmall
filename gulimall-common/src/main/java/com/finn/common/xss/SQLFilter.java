@@ -8,7 +8,7 @@
 
 package com.finn.common.xss;
 
-import io.renren.common.exception.RRException;
+import com.finn.common.exception.RRException;
 import org.apache.commons.lang.StringUtils;
 
 /**
