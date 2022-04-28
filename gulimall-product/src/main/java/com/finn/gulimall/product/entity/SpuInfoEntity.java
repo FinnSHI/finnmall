@@ -6,7 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * spu信息
@@ -16,6 +20,9 @@ import lombok.Data;
  * @date 2022-04-24 14:04:02
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @TableName("pms_spu_info")
 public class SpuInfoEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -6,8 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * 秒杀活动商品关联
@@ -17,6 +20,8 @@ import lombok.Builder;
  * @date 2022-04-25 22:59:22
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @TableName("sms_seckill_sku_relation")
 public class SeckillSkuRelationEntity implements Serializable {

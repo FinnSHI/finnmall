@@ -2,12 +2,21 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: baidu_route
-          uri: https://www.baidu.com
+        - id: product_route
+          uri: lb://gulimall-product
           predicates:
-          - Query=url,baidu
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /$\{segment}
 
-        - id: qq_route
-          uri: https://www.qq.com
+        - id: admin_route
+          uri: lb://renren-fast
           predicates:
-            - Query=url,qq
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /renren-fast/$\{segment}
+
+# 详细的路由断言要放在上面，否则会被admin_route的断言拦截
+
+server:
+  port: 88

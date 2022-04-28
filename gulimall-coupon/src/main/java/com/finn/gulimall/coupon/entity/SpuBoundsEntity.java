@@ -6,8 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * 商品spu积分设置
@@ -17,6 +20,8 @@ import lombok.Builder;
  * @date 2022-04-25 22:59:21
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @TableName("sms_spu_bounds")
 public class SpuBoundsEntity implements Serializable {
