@@ -1,5 +1,7 @@
 package com.finn.gulimall.product.service.impl;
 
+import com.finn.gulimall.product.entity.BrandEntity;
+import com.finn.gulimall.product.entity.SkuInfoEntity;
 import com.finn.gulimall.product.feign.CouponFeignService;
 import com.finn.gulimall.product.feign.SearchFeignService;
 import com.finn.gulimall.product.feign.WareFeignService;
@@ -13,6 +15,7 @@ import com.finn.gulimall.product.service.SkuSaleAttrValueService;
 import com.finn.gulimall.product.service.SpuImagesService;
 import com.finn.gulimall.product.service.SpuInfoDescService;
 import com.finn.gulimall.product.vo.SpuSaveVO;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Map;
@@ -52,19 +55,11 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     private SkuSaleAttrValueService skuSaleAttrValueService;
 
     @Autowired
-    private CouponFeignService couponFeignService;
-
-    @Autowired
     private BrandService brandService;
 
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private WareFeignService wareFeignService;
-
-    @Autowired
-    private SearchFeignService searchFeignService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -83,12 +78,38 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Override
     public void saveBaseSpuInfo(SpuInfoEntity spuInfoEntity) {
-
+        this.baseMapper.insert(spuInfoEntity);
     }
 
     @Override
     public PageUtils queryPageByCondtion(Map<String, Object> params) {
-        return null;
+        QueryWrapper<SpuInfoEntity> queryWrapper = new QueryWrapper<>();
+
+        String key = (String) params.get("key");
+        if (!StringUtils.isEmpty(key)) {
+            queryWrapper.and((wrapper) -> {
+                wrapper.eq("id",key).or().like("spu_name",key);
+            });
+        }
+
+        String status = (String) params.get("status");
+        if (!StringUtils.isEmpty(status)) {
+            queryWrapper.eq("publish_status",status);
+        }
+
+        String brandId = (String) params.get("brandId");
+        if (!StringUtils.isEmpty(brandId) && !"0".equalsIgnoreCase(brandId)) {
+            queryWrapper.eq("brand_id",brandId);
+        }
+
+        String catelogId = (String) params.get("catelogId");
+        if (!StringUtils.isEmpty(catelogId) && !"0".equalsIgnoreCase(catelogId)) {
+            queryWrapper.eq("catalog_id",catelogId);
+        }
+
+        IPage<SpuInfoEntity> page = this.page(new Query<SpuInfoEntity>().getPage(params), queryWrapper);
+
+        return new PageUtils(page);
     }
 
     @Override
@@ -98,7 +119,20 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Override
     public SpuInfoEntity getSpuInfoBySkuId(Long skuId) {
-        return null;
+        //先查询sku表里的数据
+        SkuInfoEntity skuInfoEntity = skuInfoService.getById(skuId);
+
+        //获得spuId
+        Long spuId = skuInfoEntity.getSpuId();
+
+        //再通过spuId查询spuInfo信息表里的数据
+        SpuInfoEntity spuInfoEntity = this.baseMapper.selectById(spuId);
+
+        //查询品牌表的数据获取品牌名
+        BrandEntity brandEntity = brandService.getById(spuInfoEntity.getBrandId());
+        spuInfoEntity.setBrandName(brandEntity.getName());
+
+        return spuInfoEntity;
     }
 
 }
