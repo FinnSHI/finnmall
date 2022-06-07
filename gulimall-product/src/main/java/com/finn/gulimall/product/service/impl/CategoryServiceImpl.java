@@ -1,9 +1,13 @@
 package com.finn.gulimall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.finn.gulimall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,10 +21,16 @@ import com.finn.common.utils.Query;
 import com.finn.gulimall.product.dao.CategoryDao;
 import com.finn.gulimall.product.entity.CategoryEntity;
 import com.finn.gulimall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Resource
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -62,6 +72,45 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public void removeMenuByIds(List<Long> asList) {
         // TODO 检查当前删除的菜单，是否被其他地方引用
         this.baseMapper.deleteBatchIds(asList);
+    }
+
+    /*
+    * @Description: 找到cateLogId的完整路径
+    * @Param: [catelogId]
+    * @return: java.lang.Long[]
+    * @Author: Finn
+    * @Date: 2022/05/23 21:26
+    */
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId, paths);
+        Collections.reverse(parentPath);
+        return (Long[])parentPath.toArray();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        try {
+            this.baseMapper.updateById(category);
+            categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //同时修改缓存中的数据
+        //删除缓存,等待下一次主动查询进行更新
+    }
+
+    private List<Long> findParentPath(Long catelogId, List<Long> paths) {
+        // 1.收集当前节点id
+        paths.add(catelogId);
+        CategoryEntity byId = this.getById(catelogId);
+        if(byId.getParentCid() != 0) {
+            findParentPath(byId.getCatId(), paths);
+        }
+        return paths;
     }
 
     /*

@@ -3,9 +3,13 @@ package com.finn.gulimall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.finn.common.validator.group.AddGroup;
+import com.finn.common.validator.group.UpdateGroup;
+import com.finn.common.validator.group.UpdateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,7 +63,7 @@ public class BrandController {
      * BindingResult result是校验后的结果
      */
     @RequestMapping("/save")
-    public R save(@Valid @RequestBody BrandEntity brand, BindingResult result){
+    public R save(@Validated({AddGroup.class}) @RequestBody BrandEntity brand, BindingResult result){
         brandService.save(brand);
 
         return R.ok();
@@ -69,7 +73,7 @@ public class BrandController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody BrandEntity brand){
+    public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
 
         return R.ok();
@@ -79,7 +83,7 @@ public class BrandController {
      * 修改
      */
     @RequestMapping("/update/status")
-    public R updateStatus(@RequestBody BrandEntity brand){
+    public R updateStatus(@Validated(UpdateStatusGroup.class) @RequestBody BrandEntity brand){
         brandService.updateById(brand);
         return R.ok();
     }

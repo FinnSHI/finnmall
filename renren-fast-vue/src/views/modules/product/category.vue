@@ -104,24 +104,24 @@ export default {
   methods: {
     getMenus() {
       this.$http({
-        url: this.$http.adornUrl('/product/category/list/tree'),
-        method: 'get'
+        url: this.$http.adornUrl("/product/category/list/tree"),
+        method: "get"
       }).then(({ data }) => {
-        console.log('成功获取到菜单数据...', data.data);
+        console.log("成功获取到菜单数据...", data.data);
         this.menus = data.data;
       });
     },
     batchDelete() {
       let catIds = [];
       let checkedNodes = this.$refs.menuTree.getCheckedNodes();
-      console.log('被选中的元素', checkedNodes);
+      console.log("被选中的元素", checkedNodes);
       for (let i = 0; i < checkedNodes.length; i++) {
         catIds.push(checkedNodes[i].catId);
       }
-      this.$confirm(`是否批量删除【${catIds}】菜单?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm(`是否批量删除【${catIds}】菜单?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           this.$http({
@@ -353,9 +353,9 @@ export default {
               message: "菜单删除成功",
               type: "success"
             });
-            // 刷新出新的菜单
+            //刷新出新的菜单
             this.getMenus();
-            // 设置需要默认展开的菜单
+            //设置需要默认展开的菜单
             this.expandedKey = [node.parent.data.catId];
           });
         })
@@ -364,19 +364,19 @@ export default {
       console.log("remove", node, data);
     }
   },
-  // 生命周期 - 创建完成（可以访问当前this实例）
+  //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.getMenus();
   },
-  // 生命周期 - 挂载完成（可以访问DOM元素）
+  //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
-  beforeCreate() {}, // 生命周期 - 创建之前
-  beforeMount() {}, // 生命周期 - 挂载之前
-  beforeUpdate() {}, // 生命周期 - 更新之前
-  updated() {}, // 生命周期 - 更新之后
-  beforeDestroy() {}, // 生命周期 - 销毁之前
-  destroyed() {}, // 生命周期 - 销毁完成
-  activated() {} // 如果页面有keep-alive缓存功能，这个函数会触发
+  beforeCreate() {}, //生命周期 - 创建之前
+  beforeMount() {}, //生命周期 - 挂载之前
+  beforeUpdate() {}, //生命周期 - 更新之前
+  updated() {}, //生命周期 - 更新之后
+  beforeDestroy() {}, //生命周期 - 销毁之前
+  destroyed() {}, //生命周期 - 销毁完成
+  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
 <style scoped>
