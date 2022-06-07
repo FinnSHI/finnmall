@@ -45,17 +45,6 @@ public class CategoryController {
     }
 
 
-//    /**
-//     * 列表
-//     */
-//    @RequestMapping("/list")
-//    public R list(@RequestParam Map<String, Object> params){
-//        PageUtils page = categoryService.queryPage(params);
-//
-//        return R.ok().put("page", page);
-//    }
-
-
     /**
      * 信息
      */
@@ -81,7 +70,8 @@ public class CategoryController {
      */
     @RequestMapping("/update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
+
+        categoryService.updateCascade(category);
 
         return R.ok();
     }
