@@ -13,7 +13,7 @@ import java.util.List;
  **/
 
 @Data
-public class SkuReductionTo {
+public class SkuReductionTO {
 
     private Long skuId;
     private int fullCount;

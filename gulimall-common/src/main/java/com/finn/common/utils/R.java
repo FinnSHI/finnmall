@@ -66,4 +66,9 @@ public class R extends HashMap<String, Object> {
 		put("data",data);
 		return this;
 	}
+
+	public  Integer getCode() {
+
+		return (Integer) this.get("code");
+	}
 }

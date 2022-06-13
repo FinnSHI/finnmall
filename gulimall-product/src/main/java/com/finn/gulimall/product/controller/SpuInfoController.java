@@ -30,37 +30,17 @@ import com.finn.common.utils.R;
 @RestController
 @RequestMapping("product/spuinfo")
 public class SpuInfoController {
+
     @Autowired
     private SpuInfoService spuInfoService;
-
-    /**
-     * 根据skuId查询spu的信息
-     * @param skuId
-     * @return
-     */
-    @GetMapping(value = "/skuId/{skuId}")
-    public R getSpuInfoBySkuId(@PathVariable("skuId") Long skuId) {
-
-        SpuInfoEntity spuInfoEntity = spuInfoService.getSpuInfoBySkuId(skuId);
-
-        return R.ok().setData(spuInfoEntity);
-    }
-
-    //商品上架
-    @PostMapping(value = "/{spuId}/up")
-    public R spuUp(@PathVariable("spuId") Long spuId) {
-
-        spuInfoService.up(spuId);
-
-        return R.ok();
-    }
 
     /**
      * 列表
      */
     @RequestMapping("/list")
+    //@RequiresPermissions("product:spuinfo:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = spuInfoService.queryPageByCondtion(params);
+        PageUtils page = spuInfoService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
     }
@@ -70,6 +50,7 @@ public class SpuInfoController {
      * 信息
      */
     @RequestMapping("/info/{id}")
+    //@RequiresPermissions("product:spuinfo:info")
     public R info(@PathVariable("id") Long id){
         SpuInfoEntity spuInfo = spuInfoService.getById(id);
 
@@ -80,10 +61,11 @@ public class SpuInfoController {
      * 保存
      */
     @RequestMapping("/save")
+    //@RequiresPermissions("product:spuinfo:save")
     public R save(@RequestBody SpuSaveVO vo){
         //spuInfoService.save(spuInfo);
 
-        spuInfoService.savesupInfo(vo);
+        spuInfoService.saveSpuInfo(vo);
 
         return R.ok();
     }
@@ -92,6 +74,7 @@ public class SpuInfoController {
      * 修改
      */
     @RequestMapping("/update")
+    //@RequiresPermissions("product:spuinfo:update")
     public R update(@RequestBody SpuInfoEntity spuInfo){
         spuInfoService.updateById(spuInfo);
 
@@ -102,6 +85,7 @@ public class SpuInfoController {
      * 删除
      */
     @RequestMapping("/delete")
+    //@RequiresPermissions("product:spuinfo:delete")
     public R delete(@RequestBody Long[] ids){
         spuInfoService.removeByIds(Arrays.asList(ids));
 

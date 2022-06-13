@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /*
 * 1.整合mybatis-plus
@@ -16,6 +17,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 *           1) 使用MapperScan
 *           2) SQL映射文件位置
 * */
+@EnableFeignClients(basePackages = "com.finn.gulimall.product.feign")
 @EnableDiscoveryClient
 @MapperScan("com.finn.gulimall.product.dao")
 @SpringBootApplication

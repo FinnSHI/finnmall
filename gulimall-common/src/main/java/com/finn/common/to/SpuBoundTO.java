@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  **/
 
 @Data
-public class SpuBoundTo {
+public class SpuBoundTO {
 
     private Long spuId;
 

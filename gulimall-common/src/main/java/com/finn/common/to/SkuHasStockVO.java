@@ -10,7 +10,7 @@ import lombok.Data;
  **/
 
 @Data
-public class SkuHasStockVo {
+public class SkuHasStockVO {
 
     private Long skuId;
 

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  **/
 
 @Data
-public class SeckillOrderTo {
+public class SeckillOrderTO {
 
     /**
      * 订单号
