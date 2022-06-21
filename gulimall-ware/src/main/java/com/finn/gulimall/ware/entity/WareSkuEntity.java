@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * 商品库存
@@ -17,6 +20,8 @@ import lombok.Builder;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("wms_ware_sku")
 public class WareSkuEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

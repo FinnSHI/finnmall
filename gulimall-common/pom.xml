@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-<!--    <groupId>com.finn.gulimall</groupId>-->
     <artifactId>gulimall-common</artifactId>
     <description>公共依赖类，bean，工具类</description>
 

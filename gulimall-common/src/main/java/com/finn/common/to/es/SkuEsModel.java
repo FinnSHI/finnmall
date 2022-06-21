@@ -1,18 +1,25 @@
-package com.finn.common.es;
+package com.finn.common.to.es;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * @Description:
- * @Created: with IntelliJ IDEA.
- * @author: 夏沫止水
- * @createTime: 2020-06-06 14:07
- **/
-
+/* 
+* @Description: ES对应的上架商品的模型
+* @Param:  
+* @return:  
+* @Author: Finn
+* @Date: 2022/06/16 20:20
+*/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SkuEsModel {
 
     private Long skuId;

@@ -1,10 +1,13 @@
 package com.finn.gulimall.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.finn.common.to.SkuHasStockVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,8 +30,25 @@ import com.finn.common.utils.R;
 @RestController
 @RequestMapping("ware/waresku")
 public class WareSkuController {
+
     @Autowired
     private WareSkuService wareSkuService;
+
+    /*
+    * @Description: 查询sku是否有库存
+    * @Param:
+    * @return:
+    * @Author: Finn
+    * @Date: 2022/06/20 20:39
+    */
+    @PostMapping("/hasstock")
+    public R<List<SkuHasStockVO>> getSkuHasStock(@RequestBody List<Long> skuIds){
+
+        List<SkuHasStockVO> vos = wareSkuService.getSkusHasStock(skuIds);
+        R ok = new R();
+        ok.setData(vos);
+        return ok;
+    }
 
     /**
      * 列表

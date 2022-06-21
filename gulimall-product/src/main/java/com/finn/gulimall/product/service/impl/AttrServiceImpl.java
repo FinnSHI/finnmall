@@ -265,6 +265,17 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return pageUtils;
     }
 
+    /* 
+    * @Description: 在指定的所有集合属性里，挑出检索属性
+    * @Param: [attrIds] 
+    * @return: java.util.List<java.lang.Long> 
+    * @Author: Finn
+    * @Date: 2022/06/20 20:22
+    */
+    @Override
+    public List<Long> selectSearchAttrIds(List<Long> attrIds) {
+        return this.baseMapper.selectSearchAttrIds(attrIds);
+    }
 
 
 }

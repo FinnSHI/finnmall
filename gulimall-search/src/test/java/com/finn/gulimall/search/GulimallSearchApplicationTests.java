@@ -1,10 +1,10 @@
-package com.finn.gulimall.ware;
+package com.finn.gulimall.search;
 
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GulimallWareApplicationTests {
+class GulimallSearchApplicationTests {
 
     @Test
     void contextLoads() {

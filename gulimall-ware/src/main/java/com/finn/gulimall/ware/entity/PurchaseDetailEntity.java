@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
-import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -18,6 +20,8 @@ import lombok.Builder;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("wms_purchase_detail")
 public class PurchaseDetailEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
