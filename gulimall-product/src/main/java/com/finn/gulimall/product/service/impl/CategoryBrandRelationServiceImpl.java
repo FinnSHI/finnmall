@@ -45,7 +45,7 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<CategoryBrandRelationEntity> page = this.page(
                 new Query<CategoryBrandRelationEntity>().getPage(params),
-                new QueryWrapper<CategoryBrandRelationEntity>()
+                new QueryWrapper<>()
         );
 
         return new PageUtils(page);
@@ -85,7 +85,8 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     @Override
     public List<BrandEntity> getBrandsByCatId(Long catId) {
 
-        List<CategoryBrandRelationEntity> catelogId = relationDao.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+        List<CategoryBrandRelationEntity> catelogId = relationDao.selectList(
+                new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
 
         List<BrandEntity> collect = catelogId.stream().map(item -> {
             Long brandId = item.getBrandId();

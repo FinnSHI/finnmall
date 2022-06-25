@@ -1,5 +1,7 @@
 package com.finn.common.constant;
 
+import lombok.Data;
+
 /*
  * @description: 商品常量属性
  * @author: Finn
@@ -29,7 +31,6 @@ public class ProductConstant {
         }
 
     }
-
 
     public enum ProductStatusEnum {
         NEW_SPU(0,"新建"),

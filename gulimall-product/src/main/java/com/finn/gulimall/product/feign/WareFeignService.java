@@ -1,6 +1,7 @@
 package com.finn.gulimall.product.feign;
 
 import com.finn.common.to.SkuHasStockVO;
+import com.finn.common.utils.CommonResult;
 import com.finn.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,5 +18,5 @@ import java.util.List;
 public interface WareFeignService {
 
     @PostMapping("/ware/waresku/hasstock")
-    R<List<SkuHasStockVO>> getSkuHasStock(@RequestBody List<Long> skuIds);
+    CommonResult<List<SkuHasStockVO>> getSkuHasStock(@RequestBody List<Long> skuIds);
 }

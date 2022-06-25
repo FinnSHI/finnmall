@@ -23,4 +23,5 @@
         FROM wms_ware_sku
         WHERE sku_id = #{skuId}
     </select>
+
 </mapper>

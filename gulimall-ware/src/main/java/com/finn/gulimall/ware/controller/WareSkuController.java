@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.finn.common.to.SkuHasStockVO;
+import com.finn.common.utils.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,12 +43,11 @@ public class WareSkuController {
     * @Date: 2022/06/20 20:39
     */
     @PostMapping("/hasstock")
-    public R<List<SkuHasStockVO>> getSkuHasStock(@RequestBody List<Long> skuIds){
+    public CommonResult<List<SkuHasStockVO>> getSkuHasStock(@RequestBody List<Long> skuIds){
 
         List<SkuHasStockVO> vos = wareSkuService.getSkusHasStock(skuIds);
-        R ok = new R();
-        ok.setData(vos);
-        return ok;
+
+        return CommonResult.success(vos);
     }
 
     /**

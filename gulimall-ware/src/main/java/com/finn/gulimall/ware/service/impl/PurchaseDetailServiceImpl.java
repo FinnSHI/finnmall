@@ -1,5 +1,6 @@
 package com.finn.gulimall.ware.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +22,29 @@ public class PurchaseDetailServiceImpl
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+
+        QueryWrapper<PurchaseDetailEntity> purchaseDetailEntityQueryWrapper = new QueryWrapper<>();
+
+        String key = (String) params.get("key");
+        if (!StringUtils.isEmpty(key)) {
+            purchaseDetailEntityQueryWrapper.and(w -> {
+                w.eq("purchase_id", key).or().eq("sku_id", key);
+            });
+        }
+
+        String status = (String) params.get("status");
+        if (!StringUtils.isEmpty(key)) {
+            purchaseDetailEntityQueryWrapper.eq("status", status);
+        }
+
+        String wareId = (String) params.get("wareId");
+        if (!StringUtils.isEmpty(key)) {
+            purchaseDetailEntityQueryWrapper.eq("ware_id", wareId);
+        }
+
         IPage<PurchaseDetailEntity> page = this.page(
                 new Query<PurchaseDetailEntity>().getPage(params),
-                new QueryWrapper<PurchaseDetailEntity>()
+                purchaseDetailEntityQueryWrapper
         );
 
         return new PageUtils(page);
