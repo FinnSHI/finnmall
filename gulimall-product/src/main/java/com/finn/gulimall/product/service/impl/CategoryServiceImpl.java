@@ -2,6 +2,7 @@ package com.finn.gulimall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.finn.gulimall.product.service.CategoryBrandRelationService;
+import com.finn.gulimall.product.vo.CatelogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -101,6 +102,61 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         //同时修改缓存中的数据
         //删除缓存,等待下一次主动查询进行更新
+    }
+
+    @Override
+    public List<CategoryEntity> getLevel1Categories() {
+        return this.baseMapper.selectList(new LambdaQueryWrapper<CategoryEntity>()
+                .eq(CategoryEntity::getCatLevel, 1));
+    }
+
+    @Override
+    public Map<String, List<CatelogVO>> getCatalogJson() {
+        //将数据库的多次查询变为一次
+        List<CategoryEntity> selectList = this.baseMapper.selectList(null);
+
+        //1、查出所有分类
+        //1、1）查出所有一级分类
+        List<CategoryEntity> level1Categorys = getParentCid(selectList, 0L);
+
+        //封装数据
+        Map<String, List<CatelogVO>> parentCid = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            //1、每一个的一级分类,查到这个一级分类的二级分类
+            List<CategoryEntity> categoryEntities = getParentCid(selectList, v.getCatId());
+
+            //2、封装上面的结果
+            List<CatelogVO> CatelogVOs = null;
+            if (categoryEntities != null) {
+                CatelogVOs = categoryEntities.stream().map(l2 -> {
+                    CatelogVO CatelogVO = new CatelogVO(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName().toString());
+
+                    //1、找当前二级分类的三级分类封装成vo
+                    List<CategoryEntity> level3Catelog = getParentCid(selectList, l2.getCatId());
+
+                    if (level3Catelog != null) {
+                        List<CatelogVO.Category3Vo> category3Vos = level3Catelog.stream().map(l3 -> {
+                            //2、封装成指定格式
+                            CatelogVO.Category3Vo category3Vo = new CatelogVO.Category3Vo(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
+
+                            return category3Vo;
+                        }).collect(Collectors.toList());
+                        CatelogVO.setCatalog3List(category3Vos);
+                    }
+
+                    return CatelogVO;
+                }).collect(Collectors.toList());
+            }
+
+            return CatelogVOs;
+        }));
+
+        return parentCid;
+    }
+
+    private List<CategoryEntity> getParentCid(List<CategoryEntity> selectList,Long parentCid) {
+        List<CategoryEntity> categoryEntities = selectList.stream()
+                .filter(item -> item.getParentCid().equals(parentCid)).collect(Collectors.toList());
+        return categoryEntities;
     }
 
     private List<Long> findParentPath(Long catelogId, List<Long> paths) {

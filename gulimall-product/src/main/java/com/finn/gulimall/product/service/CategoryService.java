@@ -3,6 +3,7 @@ package com.finn.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.finn.common.utils.PageUtils;
 import com.finn.gulimall.product.entity.CategoryEntity;
+import com.finn.gulimall.product.vo.CatelogVO;
 
 import java.util.List;
 import java.util.Map;
@@ -25,5 +26,9 @@ public interface CategoryService extends IService<CategoryEntity> {
     Long[] findCatelogPath(Long catelogId);
 
     void updateCascade(CategoryEntity category);
+
+    List<CategoryEntity> getLevel1Categories();
+
+    Map<String, List<CatelogVO>> getCatalogJson();
 }
 

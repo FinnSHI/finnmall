@@ -8,9 +8,13 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-
   application:
     name: gulimall-product
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -29,9 +33,10 @@ logging:
   level:
     com.finn.gulimall: debug
 
+
 #暴露所有端点
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'

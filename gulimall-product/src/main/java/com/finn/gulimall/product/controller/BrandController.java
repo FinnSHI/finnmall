@@ -7,7 +7,6 @@ import com.finn.common.validator.group.AddGroup;
 import com.finn.common.validator.group.UpdateGroup;
 import com.finn.common.validator.group.UpdateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +19,6 @@ import com.finn.gulimall.product.entity.BrandEntity;
 import com.finn.gulimall.product.service.BrandService;
 import com.finn.common.utils.PageUtils;
 import com.finn.common.utils.R;
-
-import javax.validation.Valid;
 
 
 /**
