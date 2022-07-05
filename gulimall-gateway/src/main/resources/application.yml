@@ -5,7 +5,7 @@ spring:
         - id: product_route
           uri: lb://gulimall-product
           predicates:
-            - Path=/api/product/**
+            - Path=/api/product/**, /hello
           filters:
             - RewritePath=/api/(?<segment>/?.*), /$\{segment}
 
@@ -50,6 +50,16 @@ spring:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>/?.*), /renren-fast/$\{segment}
+
+        - id: gulimall_host_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=gulimall.com, item.gulimall.com
+
+        - id: gulimall_search_route
+          uri: lb://gulimall-search
+          predicates:
+            - Host=search.gulimall.com
 
 # 详细的路由断言要放在上面，否则会被admin_route的断言拦截
 

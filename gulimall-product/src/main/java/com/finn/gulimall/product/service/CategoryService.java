@@ -3,7 +3,7 @@ package com.finn.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.finn.common.utils.PageUtils;
 import com.finn.gulimall.product.entity.CategoryEntity;
-import com.finn.gulimall.product.vo.CatelogVO;
+import com.finn.gulimall.product.vo.Catelog2VO;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +29,6 @@ public interface CategoryService extends IService<CategoryEntity> {
 
     List<CategoryEntity> getLevel1Categories();
 
-    Map<String, List<CatelogVO>> getCatalogJson();
+    Map<String, List<Catelog2VO>> getCatalogJson();
 }
 

@@ -1,6 +1,7 @@
 package com.finn.gulimall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.finn.gulimall.product.vo.SkuItemVO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -98,5 +99,21 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     public List<SkuInfoEntity> getSkusBySpuId(Long spuId) {
 
         return this.list(new LambdaQueryWrapper<SkuInfoEntity>().eq(SkuInfoEntity::getSpuId, spuId));
+    }
+
+    @Override
+    public SkuItemVO item(Long skuId) {
+        // 1. sku基本信息的获取 pms_sku_info
+
+        // 2. sku的图片信息 pms_sku_imgs
+
+        // 3. spu销售属性组合
+
+        // 4. spu的介绍
+
+        // 5. spu的规格参数信息
+
+
+        return null;
     }
 }

@@ -22,7 +22,7 @@ public class SkuItemVO {
 
     private boolean hasStock = true;
 
-    //2、sku的图片信息    pms_sku_images
+    //2、sku的图片信息 pms_sku_images
     private List<SkuImagesEntity> images;
 
     //3、获取spu的销售属性组合

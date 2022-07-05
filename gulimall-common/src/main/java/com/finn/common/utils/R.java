@@ -29,6 +29,27 @@ public class R extends HashMap<String, Object> {
 		put("msg", "success");
 	}
 
+	public R setData(Object data) {
+		put("data",data);
+		return this;
+	}
+
+	//利用fastjson进行反序列化
+	public <T> T getData(TypeReference<T> typeReference) {
+		Object data = get("data");	//默认是map
+		String jsonString = JSON.toJSONString(data);
+		T t = JSON.parseObject(jsonString, typeReference);
+		return t;
+	}
+
+	//利用fastjson进行反序列化
+	public <T> T getData(String key,TypeReference<T> typeReference) {
+		Object data = get(key);	//默认是map
+		String jsonString = JSON.toJSONString(data);
+		T t = JSON.parseObject(jsonString, typeReference);
+		return t;
+	}
+
 	public static R error() {
 		return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
 	}
