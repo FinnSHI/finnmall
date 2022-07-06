@@ -1,12 +1,23 @@
 package com.finn.gulimall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.finn.gulimall.product.entity.SkuImagesEntity;
+import com.finn.gulimall.product.service.AttrGroupService;
+import com.finn.gulimall.product.service.SkuImagesService;
+import com.finn.gulimall.product.service.SkuSaleAttrValueService;
+import com.finn.gulimall.product.service.SpuInfoDescService;
+import com.finn.gulimall.product.vo.SkuItemSaleAttrVO;
 import com.finn.gulimall.product.vo.SkuItemVO;
+import com.finn.gulimall.product.vo.SpuItemAttrGroupVO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,10 +29,25 @@ import com.finn.gulimall.product.entity.SkuInfoEntity;
 import com.finn.gulimall.product.service.SkuInfoService;
 import org.springframework.util.StringUtils;
 
-
+import javax.annotation.Resource;
 
 @Service("skuInfoService")
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> implements SkuInfoService {
+
+    @Resource
+    private SkuImagesService skuImagesService;
+
+    @Resource
+    private SpuInfoDescService spuInfoDescService;
+
+    @Resource
+    private AttrGroupService attrGroupService;
+
+    @Resource
+    private SkuSaleAttrValueService skuSaleAttrValueService;
+
+    @Resource
+    private ThreadPoolExecutor executor;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -101,19 +127,53 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         return this.list(new LambdaQueryWrapper<SkuInfoEntity>().eq(SkuInfoEntity::getSpuId, spuId));
     }
 
+    /*
+    * @Description: 异步编排优化
+    * @Param: [skuId]
+    * @return: com.finn.gulimall.product.vo.SkuItemVO
+    * @Author: Finn
+    * @Date: 2022/07/06 21:17
+    */
     @Override
-    public SkuItemVO item(Long skuId) {
-        // 1. sku基本信息的获取 pms_sku_info
+    public SkuItemVO item(Long skuId) throws ExecutionException, InterruptedException {
 
-        // 2. sku的图片信息 pms_sku_imgs
+        SkuItemVO skuItemVO = new SkuItemVO();
 
-        // 3. spu销售属性组合
+        CompletableFuture<SkuInfoEntity> infoFuture = CompletableFuture.supplyAsync(() -> {
+            // 1. sku基本信息的获取 pms_sku_info
+            SkuInfoEntity info = this.getById(skuId);
+            skuItemVO.setInfo(info);
+            return info;
+        }, executor);
 
-        // 4. spu的介绍
+        // infoFuture完成后就开始
+        CompletableFuture<Void> saleAttrFuture = infoFuture.thenAcceptAsync((res) -> {
+            // 3. spu销售属性组合
+            skuItemVO.setSaleAttr(skuSaleAttrValueService.getSaleAttrBySpuId(res.getSpuId()));
+        }, executor);
 
-        // 5. spu的规格参数信息
+        // infoFuture完成后就开始
+        CompletableFuture<Void> descFuture = infoFuture.thenAcceptAsync((res) -> {
+            // 4. spu的介绍
+            skuItemVO.setDesc(spuInfoDescService.getById(res.getSpuId()));
+        }, executor);
 
+        // infoFuture完成后就开始
+        CompletableFuture<Void> baseAttrFuture = infoFuture.thenAcceptAsync((res) -> {
+            // 5. spu的规格参数信息
+            skuItemVO.setGroupAttrs(attrGroupService.getAttrGroupWithAttrsBySpuId(res.getSpuId(),
+                    res.getCatalogId()));
+        }, executor);
 
-        return null;
+        CompletableFuture<Void> imageFuture = CompletableFuture.runAsync(() -> {
+            // 2. sku的图片信息 pms_sku_imgs
+            List<SkuImagesEntity> images = skuImagesService.getImageBySkuId(skuId);
+            skuItemVO.setImages(images);
+        }, executor);
+
+        // 等待所有任务都完成
+        CompletableFuture.allOf(saleAttrFuture, descFuture, baseAttrFuture, imageFuture).get();
+
+        return skuItemVO;
     }
 }
