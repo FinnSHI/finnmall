@@ -1,7 +1,5 @@
 package com.finn.common.constant;
 
-import lombok.Data;
-
 /*
  * @description: 商品常量属性
  * @author: Finn

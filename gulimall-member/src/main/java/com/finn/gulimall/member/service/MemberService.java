@@ -3,6 +3,7 @@ package com.finn.gulimall.member.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.finn.common.utils.PageUtils;
 import com.finn.gulimall.member.entity.MemberEntity;
+import com.finn.gulimall.member.vo.MemberUserLoginVO;
 
 import java.util.Map;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface MemberService extends IService<MemberEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    MemberEntity login(MemberUserLoginVO vo);
 }
 

@@ -1,11 +1,19 @@
 package com.finn.gulimall.member.controller;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.finn.common.enums.BizCodeEnum;
 import com.finn.gulimall.member.feign.CouponFeignService;
+import com.finn.gulimall.member.vo.MemberUserLoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +40,18 @@ public class MemberController {
     private MemberService memberService;
     @Autowired
     private CouponFeignService couponFeignService;
+
+    @PostMapping(value = "/login")
+    public R login(@RequestBody MemberUserLoginVO vo) {
+
+        MemberEntity memberEntity = memberService.login(vo);
+
+        if (memberEntity != null) {
+            return R.ok().setData(memberEntity);
+        } else {
+            return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(),BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMessage());
+        }
+    }
 
     /*
     * @Description: test
@@ -95,5 +115,4 @@ public class MemberController {
 
         return R.ok();
     }
-
 }

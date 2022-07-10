@@ -61,6 +61,16 @@ spring:
           predicates:
             - Host=search.gulimall.com
 
+        - id: gulimall_cart_route
+          uri: lb://gulimall-cart
+          predicates:
+            - Host=cart.gulimall.com
+
+        - id: gulimall_auth_route
+          uri: lb://gulimall-auth-server
+          predicates:
+            - Host=auth.gulimall.com
+
 # 详细的路由断言要放在上面，否则会被admin_route的断言拦截
 
 server:

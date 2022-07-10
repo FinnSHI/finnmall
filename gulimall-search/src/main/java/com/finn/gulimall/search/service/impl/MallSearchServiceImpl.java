@@ -1,4 +1,4 @@
-package com.finn.gulimall.search.service;
+package com.finn.gulimall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -7,6 +7,7 @@ import com.finn.common.utils.R;
 import com.finn.gulimall.search.config.GulimallElasticSearchConfig;
 import com.finn.gulimall.search.constant.EsConstant;
 import com.finn.gulimall.search.feign.ProductFeignService;
+import com.finn.gulimall.search.service.MallSearchService;
 import com.finn.gulimall.search.vo.AttrResponseVO;
 import com.finn.gulimall.search.vo.SearchParam;
 import com.finn.gulimall.search.vo.SearchResult;

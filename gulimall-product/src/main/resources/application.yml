@@ -23,6 +23,9 @@ spring:
     host: 192.168.56.10
     port: 6379
 
+  session:
+    store-type: redis
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   # 调整每个entity的id为自增
