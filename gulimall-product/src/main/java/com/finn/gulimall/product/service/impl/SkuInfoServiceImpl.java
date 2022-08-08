@@ -6,9 +6,7 @@ import com.finn.gulimall.product.service.AttrGroupService;
 import com.finn.gulimall.product.service.SkuImagesService;
 import com.finn.gulimall.product.service.SkuSaleAttrValueService;
 import com.finn.gulimall.product.service.SpuInfoDescService;
-import com.finn.gulimall.product.vo.SkuItemSaleAttrVO;
 import com.finn.gulimall.product.vo.SkuItemVO;
-import com.finn.gulimall.product.vo.SpuItemAttrGroupVO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -53,7 +51,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<SkuInfoEntity> page = this.page(
                 new Query<SkuInfoEntity>().getPage(params),
-                new QueryWrapper<SkuInfoEntity>()
+                new QueryWrapper<>()
         );
 
         return new PageUtils(page);

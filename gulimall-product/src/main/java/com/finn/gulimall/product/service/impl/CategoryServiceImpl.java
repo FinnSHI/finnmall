@@ -228,7 +228,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public Map<String, List<Catelog2VO>> getCatalogJson() {
         System.out.println("查询了数据库");
 
-        //将数据库的多次查询变为一次
+        // 将数据库的多次查询变为一次
         List<CategoryEntity> selectList = this.baseMapper.selectList(null);
 
         //1、查出所有分类
@@ -468,11 +468,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     }
 
-    private List<CategoryEntity> getParent_cid(List<CategoryEntity> selectList,Long parentCid) {
-        List<CategoryEntity> categoryEntities = selectList.stream().filter(item -> item.getParentCid().equals(parentCid)).collect(Collectors.toList());
+    private List<CategoryEntity> getParent_cid(List<CategoryEntity> selectList, Long parentCid) {
+
+        List<CategoryEntity> categoryEntities = selectList.stream()
+                .filter(item -> item.getParentCid().equals(parentCid)).collect(Collectors.toList());
         return categoryEntities;
-        // return this.baseMapper.selectList(
-        //         new QueryWrapper<CategoryEntity>().eq("parent_cid", parentCid));
     }
 
     private List<Long> findParentPath(Long catelogId, List<Long> paths) {

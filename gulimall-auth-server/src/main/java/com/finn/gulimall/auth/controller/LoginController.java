@@ -6,7 +6,6 @@ import com.finn.common.utils.R;
 import com.finn.common.vo.MemberResponseVO;
 import com.finn.gulimall.auth.feign.MemberFeignService;
 import com.finn.gulimall.auth.vo.UserLoginVO;
-import com.netflix.hystrix.HystrixThreadPoolProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -129,9 +128,9 @@ public class LoginController {
     @GetMapping(value = "/login.html")
     public String loginPage(HttpSession session) {
 
-        //从session先取出来用户的信息，判断用户是否已经登录过了
+        // 从session先取出来用户的信息，判断用户是否已经登录过了
         Object attribute = session.getAttribute(LOGIN_USER);
-        //如果用户没登录那就跳转到登录页面
+        // 如果用户没登录那就跳转到登录页面
         if (attribute == null) {
             return "login";
         } else {

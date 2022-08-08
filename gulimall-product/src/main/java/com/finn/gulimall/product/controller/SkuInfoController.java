@@ -3,6 +3,8 @@ package com.finn.gulimall.product.controller;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -94,5 +96,7 @@ public class SkuInfoController {
 
         return R.ok();
     }
-
 }
+
+
+

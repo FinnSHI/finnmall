@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -55,6 +56,7 @@ public class CartServiceImpl implements CartService {
     */
     @Override
     public CartItemVO addToCart(Long skuId, Integer num) throws ExecutionException, InterruptedException {
+
         //拿到要操作的购物车信息
         BoundHashOperations<String, Object, Object> cartOps = getCartOps();
 
@@ -122,6 +124,7 @@ public class CartServiceImpl implements CartService {
      * @return
      */
     private BoundHashOperations<String, Object, Object> getCartOps() {
+
         //先得到当前用户信息
         UserInfoTO user = CartInterceptor.threadLocal.get();
 
@@ -151,7 +154,7 @@ public class CartServiceImpl implements CartService {
         CartVO cartVo = new CartVO();
         UserInfoTO userInfoTo = CartInterceptor.threadLocal.get();
         if (userInfoTo.getUserId() != null) {
-            //1、已经登录
+            // 1、已经登录
             String cartKey = CART_PREFIX + userInfoTo.getUserId();
             // 临时购物车的键
             String temptCartKey = CART_PREFIX + userInfoTo.getUserKey();

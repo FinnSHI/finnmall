@@ -1,9 +1,11 @@
 package com.finn.gulimall.coupon.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,18 @@ import com.finn.common.utils.R;
 public class SeckillSessionController {
     @Autowired
     private SeckillSessionService seckillSessionService;
+
+    /**
+     * 查询最近三天需要参加秒杀商品的信息
+     * @return
+     */
+    @GetMapping(value = "/Latest3DaySession")
+    public R getLates3DaySession() {
+
+        List<SeckillSessionEntity> seckillSessionEntities = seckillSessionService.getLatest3DaySession();
+
+        return R.ok().setData(seckillSessionEntities);
+    }
 
     /**
      * 列表

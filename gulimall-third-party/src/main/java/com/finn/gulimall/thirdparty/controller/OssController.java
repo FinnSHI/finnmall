@@ -14,6 +14,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /*
  * @description: OSS
@@ -77,5 +82,69 @@ public class OssController {
             ossClient.shutdown();
         }
         return R.ok().put("data",respMap);
+    }
+}
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+class Codec {
+    public static void main(String[] args) {
+
+    }
+
+    StringBuilder sb;
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        sb = new StringBuilder();
+        preOrderDfs(root);
+        sb.append('z');
+        inOrderDfs(root);
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] orders = data.split("z");
+        int len = orders[0].length();
+        return buildTree(orders[0].toCharArray(), orders[1].toCharArray(), 0, len-1, 0, len-1);
+    }
+
+    public void preOrderDfs(TreeNode node) {
+        if (node == null) return;
+        char c = (char) ((char) node.val + 'a');
+        sb.append(c);
+        preOrderDfs(node.left);
+        preOrderDfs(node.right);
+    }
+
+    public void inOrderDfs(TreeNode node) {
+        if (node == null) return;
+        inOrderDfs(node.left);
+        char c = (char) ((char) node.val + 'a');
+        sb.append(c);
+        inOrderDfs(node.right);
+    }
+
+    public TreeNode buildTree(char[] preOrder, char[] inOrder, int preI, int preJ, int inI, int inJ) {
+        if (preI > preJ) return null;
+        int rootVal = preOrder[preI] - 'a';
+        TreeNode root = new TreeNode(rootVal);
+        int leftNum = 0;
+        int i = 0;
+        for (i = inI; i < inJ; i++) {
+            if (inOrder[i] - 'a' == rootVal) {
+                leftNum = i - inI;
+                break;
+            }
+        }
+        root.left = buildTree(preOrder, inOrder, preI + 1, preJ + leftNum, inI, i - 1);
+        root.right = buildTree(preOrder, inOrder, preI + leftNum + 1, preJ, i + 1, inJ);
+        return root;
     }
 }

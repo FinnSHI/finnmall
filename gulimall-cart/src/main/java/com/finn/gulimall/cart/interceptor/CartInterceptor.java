@@ -45,7 +45,7 @@ public class CartInterceptor implements HandlerInterceptor {
         if (!Objects.isNull(cookies) && cookies.length > 0) {
             for (Cookie cookie : cookies) {
                 String name = cookie.getName();
-                // 如果有临时身份（key为user-key的cookie）x
+                // 如果有临时身份（key为user-key的cookie）
                 if (CartConstant.TEMP_USER_COOKIE_NAME.equals(name)) {
                     // 保存user-key的cookie的value
                     userInfoTO.setUserKey(cookie.getValue());
@@ -55,7 +55,7 @@ public class CartInterceptor implements HandlerInterceptor {
             }
         }
 
-        //如果没有临时用户一定分配一个临时用户
+        // 如果没有临时用户一定分配一个临时用户
         if (StringUtils.isEmpty(userInfoTO.getUserKey())) {
             String uuid = UUID.randomUUID().toString();
             userInfoTO.setUserKey(uuid);
