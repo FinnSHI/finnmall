@@ -9,6 +9,8 @@ import com.finn.gulimall.seckill.feign.ProductFeignService;
 import com.finn.gulimall.seckill.service.SeckillService;
 import com.finn.gulimall.seckill.vo.SeckillSessionWithSkusVO;
 import com.finn.gulimall.seckill.vo.SkuInfoVO;
+import org.redisson.api.RSemaphore;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -36,12 +38,16 @@ public class SeckillServiceImpl implements SeckillService {
     @Autowired
     private ProductFeignService productFeignService;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     // 商品活动前缀
     private final String SESSION_CACHE_PREFIX = "seckill:sessions:";
 
     // 秒杀商品前缀
     private final String SECKILL_CHARE_PREFIX = "seckill:skus";
 
+    // 信号量
     private final String SKU_STOCK_SEMAPHORE = "seckill:stock:";    //+商品随机码
 
     @Override
@@ -98,34 +104,47 @@ public class SeckillServiceImpl implements SeckillService {
             //准备hash操作，绑定hash
             BoundHashOperations<String, Object, Object> opts = redisTemplate.boundHashOps(SECKILL_CHARE_PREFIX);
             session.getRelationSkus().stream().forEach(seckillSkuVO -> {
-                // 1.生成随机码
+                // 判断是否已经上架，上架了就不用再上架了
+                // 1.1 生成随机码
                 String token = UUID.randomUUID().toString().replace("-", "");
+                // 1.2 生成 redis 的 key
+                String redisKey = seckillSkuVO.getPromotionSessionId().toString() + "-" + seckillSkuVO.getSkuId().toString();
+                if (!opts.hasKey(redisKey)) {
+                    // 2.缓存数据
+                    SeckillSkuRedisEntity redisEntity = new SeckillSkuRedisEntity();
+                    Long skuId = seckillSkuVO.getSkuId();
 
-                // 2.缓存数据
-                SeckillSkuRedisEntity redisEntity = new SeckillSkuRedisEntity();
-                Long skuId = seckillSkuVO.getSkuId();
+                    // 2.1 sku基本数据
+                    // 2.1.1 远程调用gulimall-product, 并获取sku信息
+                    R info = productFeignService.getSkuInfo(skuId);
+                    if (info.getCode() == 0) {
+                        SkuInfoVO skuInfo = info.getData("skuInfo",new TypeReference<SkuInfoVO>(){});
+                        redisEntity.setSkuInfo(skuInfo);
+                    }
 
-                // 2.1 sku基本数据
-                // 2.1.1 远程调用gulimall-product, 并获取sku信息
-                R info = productFeignService.getSkuInfo(skuId);
-                if (info.getCode() == 0) {
-                    SkuInfoVO skuInfo = info.getData("skuInfo",new TypeReference<SkuInfoVO>(){});
-                    redisEntity.setSkuInfo(skuInfo);
+                    // 2.2 sku秒杀信息
+                    BeanUtils.copyProperties(seckillSkuVO, redisEntity);
+
+                    // 2.3 设置上商品的秒杀时间信息
+                    redisEntity.setStartTime(session.getStartTime().getTime());
+                    redisEntity.setEndTime(session.getEndTime().getTime());
+
+                    // 2.4 随机码：为每一个商品设置随机码，可以防止脚本抢货
+                    redisEntity.setRandomCode(token);
+
+                    // 转成 json 传入 redis
+                    String redisEntityJson = JSON.toJSONString(redisEntity);
+                    opts.put(seckillSkuVO.getPromotionSessionId().toString() + "-" +seckillSkuVO.getId().toString(), redisEntityJson);
+
+                    // 如果当前场次的库存信息已经上架，就不需要上架了
+                    // 2.5 使用库存作为分布式Redisson信号量 ——> 限流
+                    // 2.5.1 使用库存作为分布式信号量
+                    RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + token);
+                    // 2.5.2 商品可以秒杀的数量作为信号量
+                    semaphore.trySetPermits(seckillSkuVO.getSeckillCount());
                 }
-
-                // 2.2 sku秒杀信息
-                BeanUtils.copyProperties(seckillSkuVO, redisEntity);
-
-                // 2.3 设置上商品的秒杀时间信息
-                redisEntity.setStartTime(session.getStartTime().getTime());
-                redisEntity.setEndTime(session.getEndTime().getTime());
-
-                // 2.4 随机码：为每一个商品设置随机码，可以防止脚本抢货
-                redisEntity.setRandomCode(token);
-
-                String redisEntityJson = JSON.toJSONString(redisEntity);
-                opts.put(seckillSkuVO.getPromotionSessionId().toString() + "-" +seckillSkuVO.getId().toString(), redisEntityJson);
             });
         });
     }
 }
+
